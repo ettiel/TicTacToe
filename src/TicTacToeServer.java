@@ -49,7 +49,7 @@ public class TicTacToeServer extends JFrame implements TicTacToeConstants{
 				area.append(new Date() + ": player 2 joined game " + session + '\n');
 				area.append("player 2's IP address " + player2.getInetAddress().getHostAddress() + '\n');
 				
-				new DataOutputStream( player2.getOutputStream()).writeInt(PLAYER2);
+				new DataOutputStream(player2.getOutputStream()).writeInt(PLAYER2);
 				
 				area.append(new Date() + ": start thread for session " + session++);
 				

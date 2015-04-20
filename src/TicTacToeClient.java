@@ -6,7 +6,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-
 import javax.swing.JApplet;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -54,7 +53,7 @@ public class TicTacToeClient extends JApplet implements Runnable,
 			}
 		}
 
-		panel.setBorder(new LineBorder(Color.BLACK, 1));
+		panel.setBorder(new LineBorder(Color.WHITE, 2));
 		title.setHorizontalAlignment(JLabel.CENTER);
 		title.setFont(new Font("SansSerif", Font.BOLD, 16));
 		title.setBorder(new LineBorder(Color.BLACK, 1));
