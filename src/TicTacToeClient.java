@@ -4,10 +4,10 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.Socket;
 
 import javax.swing.JApplet;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
@@ -112,7 +112,7 @@ public class TicTacToeClient extends JApplet implements Runnable,
 				myToken = 'O';
 				otherToken = 'X';
 				title.setText("Player Two using O");
-				status.setText(("Waiting for player one to make move.");
+				status.setText("Waiting for player one to make move.");
 			}
 			
 			//continue game
@@ -171,25 +171,42 @@ public class TicTacToeClient extends JApplet implements Runnable,
 
 	private void recieveMove() {
 		//get other players move
-		int row = fromServer.readInt();
-		int column = fromServer.readInt();
-		cells[row][column].setToken(otherToken);
+		int row;
+		try {
+			row = fromServer.readInt();
+			int column = fromServer.readInt();
+			cells[row][column].setToken(otherToken);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		
 	}
 
 	//send player move to server
 	private void sendMove() {
 		
-		toServer.writeInt(rowSelected);
-		toServer.writeInt(columnSelected);
+		try {
+			toServer.writeInt(rowSelected);
+			toServer.writeInt(columnSelected);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		
 	}
 
 	private void waitForPlayerAction() {
+		
+		try {
 		while(waiting){
-			Thread.sleep(100);
+				Thread.sleep(100);
 		}
 		waiting = true;
+		
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public boolean isMyTurn() {
