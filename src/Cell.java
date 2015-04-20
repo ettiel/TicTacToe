@@ -2,6 +2,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
@@ -18,7 +19,7 @@ public class Cell extends JPanel{
 		this.row = row;
 		this.column = column;
 		this.client = client;
-		setBackground(Color.BLACK);
+		setOpaque(false);
 		setBorder(new LineBorder(Color.WHITE, 2));//cell border
 		addMouseListener(new ClickListener(this, client));
 		
@@ -31,13 +32,15 @@ public class Cell extends JPanel{
 		if(token == 'X'){
 			g.setColor(Color.PINK);
 			Graphics2D g2 = (Graphics2D) g;
+			 g2.setRenderingHint ( RenderingHints.KEY_ANTIALIASING,
+	                    RenderingHints.VALUE_ANTIALIAS_ON );
 			g2.setStroke(new BasicStroke(5));
 			g2.drawLine(10, 10, getWidth()-10, getHeight() -10);
 			g2.drawLine(getWidth()-10, 10, 10, getHeight() -10);
 		}
 		
 		else if (token == 'O'){
-			g.setColor(Color.BLUE);
+			g.setColor(Color.CYAN);
 			Graphics2D g2 = (Graphics2D) g;
 			g2.setStroke(new BasicStroke(5));
 			g2.drawOval(10, 10, getWidth() - 20, getHeight() - 20);

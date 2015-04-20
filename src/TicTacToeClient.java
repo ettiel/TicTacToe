@@ -146,6 +146,7 @@ public class TicTacToeClient extends JApplet implements Runnable,
 				status.setText("Player one (X) has won!");
 				recieveMove();
 			}
+			
 		}
 		
 		else if(gameStatus == PLAYER2_WON){
@@ -158,6 +159,7 @@ public class TicTacToeClient extends JApplet implements Runnable,
 				status.setText("Player 2 (O) has won!");
 				recieveMove();
 			}
+			
 		}
 		
 		else{
