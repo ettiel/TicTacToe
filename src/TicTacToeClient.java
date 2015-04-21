@@ -1,17 +1,20 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.Socket;
-import javax.swing.JApplet;
+
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
-public class TicTacToeClient extends JApplet implements Runnable,
+public class TicTacToeClient extends JFrame implements Runnable,
 		TicTacToeConstants {
 
 	private boolean myTurn;
@@ -27,7 +30,7 @@ public class TicTacToeClient extends JApplet implements Runnable,
 	private DataOutputStream toServer;
 	private boolean waiting;
 	private boolean isStandAlone;// if run as application
-	private String host;// host name or IP add
+	private String host;// host name or IP address
 
 	public TicTacToeClient() {
 		myTurn = false;
@@ -40,10 +43,6 @@ public class TicTacToeClient extends JApplet implements Runnable,
 		waiting = true;
 		isStandAlone = false;
 		host = "localhost";
-	}
-
-	@Override
-	public void init() {
 
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridLayout(3, 3, 0, 0));
@@ -53,6 +52,8 @@ public class TicTacToeClient extends JApplet implements Runnable,
 			}
 		}
 
+		setSize(400, 400);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		panel.setBorder(new LineBorder(Color.WHITE, 2));
 		title.setHorizontalAlignment(JLabel.CENTER);
 		title.setFont(new Font("SansSerif", Font.BOLD, 16));
@@ -72,7 +73,8 @@ public class TicTacToeClient extends JApplet implements Runnable,
 			if (isStandAlone) {
 				socket = new Socket(host, 7000);
 			} else {
-				socket = new Socket(getCodeBase().getHost(), 7000);
+				socket = new Socket(InetAddress.getLocalHost().getHostName(),
+						7000);
 			}
 
 			// input & output streams to get and send data from and to server
@@ -106,25 +108,24 @@ public class TicTacToeClient extends JApplet implements Runnable,
 
 				myTurn = true;// Plyer one's turn
 			}
-			
-			else if(player == PLAYER2){
+
+			else if (player == PLAYER2) {
 				myToken = 'O';
 				otherToken = 'X';
 				title.setText("Player Two using O");
 				status.setText("Waiting for player one to make move.");
 			}
-			
-			//continue game
-			while(continueToPlay){
-				if(player == PLAYER1){
-					waitForPlayerAction();//wait for plyer one
-					sendMove();//send move to server
+
+			// continue game
+			while (continueToPlay) {
+				if (player == PLAYER1) {
+					waitForPlayerAction();// wait for plyer one
+					sendMove();// send move to server
 					recieveInfoFromServer();
-				}
-				else if(player == PLAYER2){
+				} else if (player == PLAYER2) {
 					recieveInfoFromServer();
-					waitForPlayerAction();//wait for player 2 to move
-					sendMove(); //send player 2 move to server
+					waitForPlayerAction();// wait for player 2 to move
+					sendMove(); // send player 2 move to server
 				}
 			}
 
@@ -132,46 +133,54 @@ public class TicTacToeClient extends JApplet implements Runnable,
 		}
 	}
 
-	private void recieveInfoFromServer() throws IOException{
+	public void gameOverScreen(){
+		repaint();
 		
-		int gameStatus = fromServer.readInt();//get game status
-		
-		if(gameStatus == PLAYER1_WON){
-			//winner so stop game
+	}
+	
+
+	
+	
+	private void recieveInfoFromServer() throws IOException {
+
+		int gameStatus = fromServer.readInt();// get game status
+
+		if (gameStatus == PLAYER1_WON) {
+			// winner so stop game
 			continueToPlay = false;
-			if(myToken == 'X'){
+			//gameOverScreen();
+			if (myToken == 'X') {
 				status.setText("YOU WON (Player X)!");
-			}
-			else if(myToken == '0'){
+			} else if (myToken == '0') {
 				status.setText("Player one (X) has won!");
 				recieveMove();
 			}
-			
+
 		}
-		
-		else if(gameStatus == PLAYER2_WON){
-			//player 2 won so stop game
+
+		else if (gameStatus == PLAYER2_WON) {
+			// player 2 won so stop game
 			continueToPlay = false;
-			if(myToken == 'O'){
+			//gameOverScreen();
+			if (myToken == 'O') {
 				status.setText("YOU WON (Player O)!");
-			}
-			else if(myToken == 'X'){
+			} else if (myToken == 'X') {
 				status.setText("Player 2 (O) has won!");
 				recieveMove();
 			}
-			
+
 		}
-		
-		else{
+
+		else {
 			recieveMove();
 			status.setText("Your turn");
-			myTurn = true; 
+			myTurn = true;
 		}
-		
+
 	}
 
 	private void recieveMove() {
-		//get other players move
+		// get other players move
 		int row;
 		try {
 			row = fromServer.readInt();
@@ -180,31 +189,29 @@ public class TicTacToeClient extends JApplet implements Runnable,
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		
+
 	}
 
-	//send player move to server
+	// send player move to server
 	private void sendMove() {
-		
+
 		try {
 			toServer.writeInt(rowSelected);
 			toServer.writeInt(columnSelected);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		
+
 	}
 
 	private void waitForPlayerAction() {
-		
+
 		try {
-		while(waiting){
+			while (waiting) {
 				Thread.sleep(100);
-		}
-		waiting = true;
-		
+			}
+			waiting = true;
+
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -242,4 +249,8 @@ public class TicTacToeClient extends JApplet implements Runnable,
 		this.waiting = waiting;
 	}
 
+	public static void main(String args[]) {
+		TicTacToeClient client = new TicTacToeClient();
+		client.setVisible(true);
+	}
 }
