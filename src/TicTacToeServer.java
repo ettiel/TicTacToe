@@ -25,8 +25,8 @@ public class TicTacToeServer extends JFrame implements TicTacToeConstants{
 		setVisible(true);
 		
 		try{
-			ServerSocket serverSocket = new ServerSocket(8000);
-			area.append(new Date() + ": server started at socket 8000");
+			ServerSocket serverSocket = new ServerSocket(7000);
+			area.append(new Date() + ": server started at socket 7000");
 			
 			int session = 1;
 			

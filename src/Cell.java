@@ -2,8 +2,6 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
@@ -32,8 +30,6 @@ public class Cell extends JPanel{
 		if(token == 'X'){
 			g.setColor(Color.PINK);
 			Graphics2D g2 = (Graphics2D) g;
-			 g2.setRenderingHint ( RenderingHints.KEY_ANTIALIASING,
-	                    RenderingHints.VALUE_ANTIALIAS_ON );
 			g2.setStroke(new BasicStroke(5));
 			g2.drawLine(10, 10, getWidth()-10, getHeight() -10);
 			g2.drawLine(getWidth()-10, 10, 10, getHeight() -10);

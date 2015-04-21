@@ -70,9 +70,9 @@ public class TicTacToeClient extends JApplet implements Runnable,
 		try {
 			Socket socket;
 			if (isStandAlone) {
-				socket = new Socket(host, 8000);
+				socket = new Socket(host, 7000);
 			} else {
-				socket = new Socket(getCodeBase().getHost(), 8000);
+				socket = new Socket(getCodeBase().getHost(), 7000);
 			}
 
 			// input & output streams to get and send data from and to server
